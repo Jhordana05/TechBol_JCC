@@ -1,0 +1,76 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Registrar Pedido - TechBol{% endblock %}
+
+{% block content %}
+
+<h2>Registrar Pedido</h2>
+
+{% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% for categoria, mensaje in mensajes %}
+        <div class="alert alert-{{ categoria }}">
+            {{ mensaje }}
+        </div>
+    {% endfor %}
+{% endwith %}
+
+{% if clientes and productos %}
+
+<form method="POST">
+
+    <div class="mb-3">
+        <label class="form-label">Seleccione un cliente:</label>
+        <select name="cliente_id" class="form-control" required>
+            <option value="">Seleccione un cliente</option>
+            {% for cliente in clientes %}
+            <option value="{{ cliente.id }}">
+                {{ cliente.nombre }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Seleccione un producto:</label>
+        <select name="producto_id" class="form-control" required>
+            <option value="">Seleccione un producto</option>
+            {% for producto in productos %}
+            <option value="{{ producto.id }}">
+                {{ producto.nombre }} - Bs {{ producto.precio }}
+                (Stock: {{ producto.stock }})
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Cantidad:</label>
+        <input type="number" name="cantidad" class="form-control"
+               min="1" required>
+    </div>
+
+    <button type="submit" class="btn btn-success">Guardar Pedido</button>
+
+    <a href="{{ url_for('pedidos.listar_pedidos') }}"
+       class="btn btn-secondary">
+        Cancelar
+    </a>
+
+</form>
+
+{% else %}
+
+<div class="alert alert-warning">
+    Primero debe registrar al menos un cliente y un producto.
+</div>
+
+<a href="{{ url_for('clientes.listar_clientes') }}"
+   class="btn btn-success">Ir a Clientes</a>
+
+<a href="{{ url_for('productos.listar_productos') }}"
+   class="btn btn-primary">Ir a Productos</a>
+
+{% endif %}
+
+{% endblock %}

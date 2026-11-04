@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Clientes - TechBol{% endblock %}
+
+{% block content %}
+
+<h2>Lista de Clientes</h2>
+
+<a href="{{ url_for('clientes.crear_cliente') }}" class="btn btn-success mb-3">
+    Registrar Cliente
+</a>
+
+{% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% for categoria, mensaje in mensajes %}
+        <div class="alert alert-{{ categoria }}">
+            {{ mensaje }}
+        </div>
+    {% endfor %}
+{% endwith %}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Teléfono</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for cliente in clientes %}
+        <tr>
+            <td>{{ cliente.id }}</td>
+            <td>{{ cliente.nombre }}</td>
+            <td>{{ cliente.telefono }}</td>
+            <td>
+                <a href="{{ url_for('clientes.editar_cliente', id=cliente.id) }}"
+                   class="btn btn-warning btn-sm">
+                    Editar
+                </a>
+
+                <form action="{{ url_for('clientes.eliminar_cliente', id=cliente.id) }}"
+                      method="POST" style="display:inline;">
+
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        Eliminar
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
